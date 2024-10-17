@@ -1,103 +1,89 @@
-# Digital Forensic Tool for Images
+# Image Forensics Tool
 
-This is a command-line tool designed for digital forensics of images. It performs various analyses, including metadata extraction, error level analysis (ELA), hash verification, file signature verification, and steganography detection.
-
-## Table of Contents
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Test Images](#test-images)
-- [Examples](#examples)
-- [License](#license)
+The **Image Forensics Tool** is a desktop application built with Python and Tkinter that provides various functionalities to analyze and assess image files. It can calculate the SHA-1 hash of images, check for steganography, validate the file extension against its actual format, perform Error Level Analysis (ELA), and extract EXIF metadata.
 
 ## Features
-- **Metadata Extraction**: Extracts and displays EXIF metadata from images.
-- **Error Level Analysis (ELA)**: Detects tampering by highlighting edited areas in an image.
-- **Hash Calculation**: Calculates MD5 and SHA-256 hashes for image integrity verification.
-- **File Signature Verification**: Checks if the file extension matches its actual format.
-- **Steganography Detection**: Identifies hidden data within images.
+
+- **Upload Image:** Select an image file for analysis.
+- **Calculate Hash (SHA-1):** Computes the SHA-1 hash of the uploaded image.
+- **Check for Steganography:** Detects the presence of steganography in the image.
+- **Check Signature:** Validates if the file extension matches the actual image type.
+- **Perform ELA:** Analyzes the image to identify any modifications.
+- **Get EXIF Data:** Extracts and displays EXIF metadata from the image.
 
 ## Requirements
-- Python 3.x
-- Required Python packages:
-  - `Pillow`
-  - `numpy`
-  - `scikit-image`
-  - `hashlib`
+
+Before running the application, ensure you have the following Python packages installed:
+
+- `Pillow` - For image processing.
+- `exifread` - For reading EXIF metadata.
+- `opencv-python` - For image analysis.
+- `numpy` - For numerical operations.
 
 You can install the required packages using pip:
 
 ```bash
-pip install Pillow numpy scikit-image
+pip install Pillow exifread opencv-python numpy
 ```
 
-## Installation
-1. Clone the repository:
+## How to Use
+
+1. **Clone the Repository:**
+
+   Clone this repository to your local machine:
+
    ```bash
-   git clone https://github.com/yourusername/digital-forensic-tool.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd digital-forensic-tool
+   git clone <repository-url>
+   cd Image-Forensics-Tool
    ```
 
-## Usage
-Run the tool from the command line with the following syntax:
+2. **Run the Application:**
 
-```bash
-python forensic_tool.py <image_path> [options]
+   Open a terminal or command prompt, navigate to the directory where the script is located, and run:
+
+   ```bash
+   python image_forensics_tool.py
+   ```
+
+3. **Using the Application:**
+
+   - Click on the **Upload Image** button to select an image file (supported formats: `.jpg`, `.jpeg`, `.png`).
+   - Use the available buttons to perform various analyses on the uploaded image.
+   - Results will be displayed in pop-up message boxes.
+
+## File Structure
+
+```
+Image-Forensics-Tool/
+│
+├── image_forensics_tool.py   # Main application script
+├── requirements.txt           # List of dependencies
+└── README.md                  # Project documentation
 ```
 
-### Options:
-- `--metadata`: Extract metadata (EXIF).
-- `--ela`: Perform Error Level Analysis.
-- `--hash`: Calculate MD5 and SHA-256 hashes.
-- `--signature`: Verify file signature.
-- `--stego`: Detect hidden data (steganography).
+## Contributing
 
-## Test Images
-You can test the tool with the following types of images located in the `sample_images` directory:
-- Original, untampered images
-- Edited or photoshopped images
-- Images with hidden data (steganography)
-- Corrupted or manipulated file signatures
-- Compressed images
-- Multiple image formats (e.g., `.jpg`, `.png`, `.bmp`)
-
-## Examples
-1. **Extract Metadata**:
-   ```bash
-   python forensic_tool.py sample_images/original_photo.jpg --metadata
-   ```
-
-2. **Perform Error Level Analysis**:
-   ```bash
-   python forensic_tool.py sample_images/photoshopped_photo.jpg --ela
-   ```
-
-3. **Calculate Hashes**:
-   ```bash
-   python forensic_tool.py sample_images/original_photo.jpg --hash
-   ```
-
-4. **Verify File Signature**:
-   ```bash
-   python forensic_tool.py sample_images/renamed_image.png --signature
-   ```
-
-5. **Detect Hidden Data**:
-   ```bash
-   python forensic_tool.py sample_images/stego_image.jpg --stego
-   ```
+Contributions are welcome! If you have suggestions or improvements, feel free to open an issue or submit a pull request.
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [Pillow](https://pillow.readthedocs.io/en/stable/) for image processing.
+- [OpenCV](https://opencv.org/) for image analysis.
+- [ExifRead](https://pypi.org/project/exifread/) for extracting EXIF data.
+
 ```
 
 ### Instructions for Use
-- Replace `https://github.com/yourusername/digital-forensic-image-tool.git` with the actual URL of your GitHub repository.
-- If you have any additional installation steps or configurations required for your tool, you can add them under the **Installation** section.
-- If you decide to include a LICENSE file, ensure to add it to your repository as referenced in the **License** section.
 
-Feel free to modify this `README.md` according to your project's specifics or any additional features you may want to include!
+- **Replace `<repository-url>`** in the `Clone the Repository` section with the actual URL of your GitHub repository (if you plan to host the project on GitHub).
+- You can add a `requirements.txt` file listing all the dependencies, which can be generated using the following command:
+
+```bash
+pip freeze > requirements.txt
+```
+
+This `README.md` provides users with all the necessary information to understand, install, and use the Image Forensics Tool effectively. Let me know if you need any further changes or additions!
