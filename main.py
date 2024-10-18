@@ -6,6 +6,7 @@ import hashlib
 import numpy as np
 import cv2
 import mimetypes
+import os
 
 class ImageForensicsTool:
     def __init__(self, root):
@@ -42,7 +43,7 @@ class ImageForensicsTool:
         self.metadata_button.pack(pady=5)
 
     def upload_image(self):
-        self.image_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg;*.jpeg;*.png")])
+        self.image_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.tiff;*.tif")])
         if self.image_path:
             self.display_image()
 
@@ -82,18 +83,40 @@ class ImageForensicsTool:
     def check_signature(self):
         if self.image_path:
             file_extension = self.image_path.split('.')[-1].lower()
-            mime_type, _ = mimetypes.guess_type(self.image_path)
+            actual_format = self.detect_file_signature(self.image_path)
 
-            if mime_type is not None:
-                expected_extension = mime_type.split('/')[1]
-                if file_extension == expected_extension:
+            if actual_format:
+                if actual_format == file_extension:
                     messagebox.showinfo("Signature Check", "Signature is valid.")
                 else:
-                    messagebox.showinfo("Signature Check", "Signature is invalid: expected .{} but found .{}".format(expected_extension, file_extension))
+                    messagebox.showinfo("Signature Check", f"Signature is invalid: expected .{actual_format} but found .{file_extension}")
             else:
-                messagebox.showwarning("Warning", "Could not determine the file type.")
+                messagebox.showwarning("Signature Check", "Unknown file format or unsupported image type.")
         else:
             messagebox.showwarning("Warning", "Please upload an image first.")
+
+    def detect_file_signature(self, file_path):
+        """Detect the actual file signature based on its magic number."""
+        with open(file_path, 'rb') as file:
+            header = file.read(10)
+
+            # Check for JPEG
+            if header[:3] == b'\xff\xd8\xff':
+                return 'jpg'
+            # Check for PNG
+            elif header[:8] == b'\x89PNG\r\n\x1a\n':
+                return 'png'
+            # Check for GIF
+            elif header[:6] in [b'GIF87a', b'GIF89a']:
+                return 'gif'
+            # Check for BMP
+            elif header[:2] == b'BM':
+                return 'bmp'
+            # Check for TIFF
+            elif header[:4] in [b'II*\x00', b'MM\x00*']:
+                return 'tiff'
+            else:
+                return None
 
     def perform_ela(self):
         if self.image_path:
