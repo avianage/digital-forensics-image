@@ -1,12 +1,11 @@
 # Image Forensics Tool
 
-The **Image Forensics Tool** is a desktop application built with Python and Tkinter that provides various functionalities to analyze and assess image files. It can calculate the SHA-1 hash of images, check for steganography, validate the file extension against its actual format, perform Error Level Analysis (ELA), and extract EXIF metadata.
+The **Image Forensics Tool** is a desktop application built with Python and Tkinter that provides various functionalities to analyze and assess image files. It can calculate the SHA-1 hash of images, validate the file extension against its actual format, perform Error Level Analysis (ELA), and extract EXIF metadata.
 
 ## Features
 
 - **Upload Image:** Select an image file for analysis.
 - **Calculate Hash (SHA-1):** Computes the SHA-1 hash of the uploaded image.
-- **Check for Steganography:** Detects the presence of steganography in the image.
 - **Check Signature:** Validates if the file extension matches the actual image type.
 - **Perform ELA:** Analyzes the image to identify any modifications.
 - **Get EXIF Data:** Extracts and displays EXIF metadata from the image.
