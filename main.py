@@ -12,11 +12,13 @@ class ImageForensicsTool:
     def __init__(self, root):
         self.root = root
         self.root.title("Image Forensics Tool")
-        self.root.geometry("700x700")  # Adjusted window size
+        self.root.attributes("-fullscreen", True)  # Set full screen mode
         self.root.configure(bg="#e0f7fa")  # Light blue background
 
         self.image_path = None
 
+        self.root.bind("<Escape>", lambda event: self.root.attributes("-fullscreen", False))
+        
         # Create the UI elements
         self.title_label = tk.Label(self.root, text="Image Forensics Tool", font=("Arial", 24), bg="#e0f7fa", fg="#00796b")
         self.title_label.pack(pady=20)
