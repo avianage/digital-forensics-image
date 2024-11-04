@@ -12,7 +12,7 @@ class ImageForensicsTool:
     def __init__(self, root):
         self.root = root
         self.root.title("Image Forensics Tool")
-        self.root.geometry("600x600")  # Increased window size
+        self.root.geometry("700x700")  # Adjusted window size
         self.root.configure(bg="#e0f7fa")  # Light blue background
 
         self.image_path = None
@@ -24,23 +24,29 @@ class ImageForensicsTool:
         self.image_label = tk.Label(self.root, bg="#e0f7fa")
         self.image_label.pack(pady=10)
 
-        self.upload_button = tk.Button(self.root, text="Upload Image", command=self.upload_image, bg="#4CAF50", fg="white", font=("Arial", 12), padx=10, pady=5)
-        self.upload_button.pack(pady=10)
+        # Frame to hold buttons side by side
+        self.button_frame = tk.Frame(self.root, bg="#e0f7fa")
+        self.button_frame.pack(pady=10)
 
-        self.hash_button = tk.Button(self.root, text="Calculate Hash (SHA-1)", command=self.calculate_hash, bg="#2196F3", fg="white", font=("Arial", 12), padx=10, pady=5)
-        self.hash_button.pack(pady=5)
+        # Create buttons and add them to the button frame in a grid layout
+        self.upload_button = tk.Button(self.button_frame, text="Upload Image", command=self.upload_image, bg="#4CAF50", fg="white", font=("Arial", 12), padx=10, pady=5)
+        self.upload_button.grid(row=0, column=0, padx=5, pady=5)
 
-        self.steganography_button = tk.Button(self.root, text="Check for Steganography", command=self.check_steganography, bg="#FF9800", fg="white", font=("Arial", 12), padx=10, pady=5)
-        self.steganography_button.pack(pady=5)
+        self.hash_button = tk.Button(self.button_frame, text="Calculate Hash (SHA-1)", command=self.calculate_hash, bg="#2196F3", fg="white", font=("Arial", 12), padx=10, pady=5)
+        self.hash_button.grid(row=0, column=1, padx=5, pady=5)
 
-        self.signature_button = tk.Button(self.root, text="Check Signature", command=self.check_signature, bg="#9C27B0", fg="white", font=("Arial", 12), padx=10, pady=5)
-        self.signature_button.pack(pady=5)
+        self.signature_button = tk.Button(self.button_frame, text="Check Signature", command=self.check_signature, bg="#9C27B0", fg="white", font=("Arial", 12), padx=10, pady=5)
+        self.signature_button.grid(row=0, column=2, padx=5, pady=5)
 
-        self.ela_button = tk.Button(self.root, text="Perform ELA", command=self.perform_ela, bg="#673AB7", fg="white", font=("Arial", 12), padx=10, pady=5)
-        self.ela_button.pack(pady=5)
+        self.ela_button = tk.Button(self.button_frame, text="Perform ELA", command=self.perform_ela, bg="#673AB7", fg="white", font=("Arial", 12), padx=10, pady=5)
+        self.ela_button.grid(row=0, column=3, padx=5, pady=5)
 
-        self.metadata_button = tk.Button(self.root, text="Get EXIF Data", command=self.get_exif_data, bg="#FF5722", fg="white", font=("Arial", 12), padx=10, pady=5)
-        self.metadata_button.pack(pady=5)
+        self.metadata_button = tk.Button(self.button_frame, text="Extract EXIF Metadata", command=self.display_exif_metadata, bg="#795548", fg="white", font=("Arial", 12), padx=10, pady=5)
+        self.metadata_button.grid(row=0, column=4, padx=5, pady=5)
+
+        # Common text area to display metadata and other information
+        self.metadata_text = tk.Text(root, wrap=tk.WORD, font=("Arial", 10), padx=10, pady=5)
+        self.metadata_text.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
 
     def upload_image(self):
         self.image_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg;*.jpeg;*.png;*.gif;*.bmp;*.tiff;*.tif")])
@@ -56,7 +62,8 @@ class ImageForensicsTool:
     def calculate_hash(self):
         if self.image_path:
             hash_value = self.hash_image(self.image_path)
-            messagebox.showinfo("Hash (SHA-1)", f"SHA-1 Hash: {hash_value}")
+            self.metadata_text.delete("1.0", tk.END)  # Clear the text area
+            self.metadata_text.insert(tk.END, f"SHA-1 Hash: {hash_value}\n")
         else:
             messagebox.showwarning("Warning", "Please upload an image first.")
 
@@ -67,31 +74,19 @@ class ImageForensicsTool:
                 hash_sha1.update(chunk)
         return hash_sha1.hexdigest()
 
-    def check_steganography(self):
-        if self.image_path:
-            is_steganography = self.detect_steganography(self.image_path)
-            messagebox.showinfo("Steganography Check", "Steganography detected!" if is_steganography else "No steganography detected.")
-        else:
-            messagebox.showwarning("Warning", "Please upload an image first.")
-
-    def detect_steganography(self, image_path):
-        # A simple check for steganography (this could be improved)
-        img = Image.open(image_path)
-        img_data = np.array(img)
-        return img_data.mean() > 128  # Example: a naive threshold check
-
     def check_signature(self):
         if self.image_path:
             file_extension = self.image_path.split('.')[-1].lower()
             actual_format = self.detect_file_signature(self.image_path)
+            self.metadata_text.delete("1.0", tk.END)  # Clear the text area
 
             if actual_format:
                 if actual_format == file_extension:
-                    messagebox.showinfo("Signature Check", "Signature is valid.")
+                    self.metadata_text.insert(tk.END, "Signature is valid.\n")
                 else:
-                    messagebox.showinfo("Signature Check", f"Signature is invalid: expected .{actual_format} but found .{file_extension}")
+                    self.metadata_text.insert(tk.END, f"Signature is invalid: expected .{actual_format} but found .{file_extension}\n")
             else:
-                messagebox.showwarning("Signature Check", "Unknown file format or unsupported image type.")
+                self.metadata_text.insert(tk.END, "Unknown file format or unsupported image type.\n")
         else:
             messagebox.showwarning("Warning", "Please upload an image first.")
 
@@ -121,7 +116,8 @@ class ImageForensicsTool:
     def perform_ela(self):
         if self.image_path:
             result = self.ela_analysis(self.image_path)
-            messagebox.showinfo("ELA Result", result)
+            self.metadata_text.delete("1.0", tk.END)  # Clear the text area
+            self.metadata_text.insert(tk.END, result + "\n")
         else:
             messagebox.showwarning("Warning", "Please upload an image first.")
 
@@ -146,20 +142,29 @@ class ImageForensicsTool:
         except Exception as e:
             return f"Error performing ELA: {str(e)}"
 
-    def get_exif_data(self):
-        if self.image_path:
-            exif_data = self.extract_exif(self.image_path)
-            messagebox.showinfo("EXIF Data", exif_data)
-        else:
-            messagebox.showwarning("Warning", "Please upload an image first.")
+    def extract_exif_metadata(self, image_path):
+        try:
+            with open(image_path, 'rb') as f:
+                tags = exifread.process_file(f)
+                metadata = {tag: tags[tag] for tag in tags}
+            return metadata
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to extract metadata: {e}")
+            return None
 
-    def extract_exif(self, image_path):
-        with open(image_path, 'rb') as f:
-            tags = exifread.process_file(f)
-            exif_string = ""
-            for tag, value in tags.items():
-                exif_string += f"{tag}: {value}\n"
-            return exif_string if exif_string else "No EXIF data found."
+    def display_exif_metadata(self):
+        if self.image_path:
+            metadata = self.extract_exif_metadata(self.image_path)
+            self.metadata_text.delete("1.0", tk.END)  # Clear the text area
+
+            if metadata:
+                for tag, value in metadata.items():
+                    self.metadata_text.insert(tk.END, f"{tag}: {value}\n")
+            else:
+                self.metadata_text.insert(tk.END, "No metadata found in this image.\n")
+        else:
+            messagebox.showwarning("No Image", "Please upload an image first.")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
